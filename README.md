@@ -46,7 +46,7 @@ Here's why this is good:
 7
 Now that you installed the package and set up the feature in your Program.cs / Startup.cs file, you can start creating your services and registering them as follows:
 
-1. Mark your service interface with the <strong>[InjectableService]</strong> attribute.
+1. Mark your service interface with the <strong>[InjectableService]</strong> attribute. <br/>
    ![image](https://github.com/AlejoMillo00/AMillo.InjectableServices/assets/43641714/8a6b058c-8bbd-452b-a6cb-a59a4d7a4b21)
 2. That's it! Your service will ge registered automatically on startup.
 
