@@ -1,45 +1,83 @@
 ﻿namespace AMillo.InjectableServices.Extensions.DependencyInjection;
 
+using AMillo.InjectableServices.Attributes;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Reflection;
 
 public static class DependencyInjectionExtension
 {
-    private static IServiceCollection _services = new ServiceCollection();
-    private static Type[] _types = [];
-
     public static void AddInjectableServices(this IServiceCollection services)
     {
-        Initialize(services);
-        InjectServices();
-    }
-    private static void Initialize(IServiceCollection services)
-    {
-        _types = AppDomain
+        Assembly[] assemblies = AppDomain
             .CurrentDomain
-            .GetAssemblies()
+            .GetAssemblies();
+
+        services.AddInjectableServicesFromAssemblies(assemblies);
+    }
+
+    public static void AddInjectableServicesFromAssembly(this IServiceCollection services, Assembly assembly)
+    {
+        services.AddInjectableServicesFromAssemblies([assembly]);
+    }
+
+    public static void AddInjectableServicesFromAssemblies(this IServiceCollection services, Assembly[] assemblies)
+    {
+        Type[] types = assemblies
             .SelectMany(assembly => assembly.GetTypes())
             .ToArray();
-        _services = services;
-    }
 
-    private static void InjectServices()
-    {
-        foreach (Type @interface in _types.GetInjectableInterfaces())
+        foreach (Type @interface in GetInjectableInterfaces(types))
         {
-            Inject(@interface);
+            InjectInterfaceWithAllImplementations(@interface, types, services);
         }
     }
 
-    private static void Inject(Type @interface)
+    private static Type[] GetInjectableInterfaces(Type[] types)
     {
-        foreach (Type implementation in _types.GetImplementationsForInterface(@interface))
+        return types
+            .Where(t => t.IsInterface && t.IsDefined(typeof(InjectableServiceAttribute), false))
+            .ToArray();
+    }
+
+    private static void InjectInterfaceWithAllImplementations(Type @interface, Type[] types, IServiceCollection services)
+    {
+        foreach (Type implementation in GetImplementationsForInterface(@interface, types))
         {
-            _ = @interface.GetLifetimeFromAttributeData() switch
+            _ = GetLifetimeFromAttributeData(@interface) switch
             {
-                ServiceLifetime.Singleton => _services.AddSingleton(@interface, implementation),
-                ServiceLifetime.Transient => _services.AddTransient(@interface, implementation),
-                _ => _services.AddScoped(@interface, implementation),
+                ServiceLifetime.Singleton => services.AddSingleton(@interface, implementation),
+                ServiceLifetime.Transient => services.AddTransient(@interface, implementation),
+                _ => services.AddScoped(@interface, implementation),
             };
         }
+    }
+
+    private static Type[] GetImplementationsForInterface(Type @interface, Type[] types)
+    {
+        if (@interface.IsGenericType)
+        {
+            return types.Where(t =>
+                t.GetInterfaces()
+                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == @interface)).ToArray();
+        }
+
+        return types
+            .Where(t => @interface.IsAssignableFrom(t) && t.IsClass)
+            .ToArray();
+    }
+
+    private static ServiceLifetime GetLifetimeFromAttributeData(Type @interface)
+    {
+        IList<CustomAttributeData> attributesData = @interface.GetCustomAttributesData();
+
+        CustomAttributeData injectableAttributeData = attributesData
+            .First(a => a.AttributeType == typeof(InjectableServiceAttribute));
+
+        CustomAttributeTypedArgument lifetimeArgument = injectableAttributeData
+            .ConstructorArguments
+            .First(a => a.ArgumentType == typeof(ServiceLifetime));
+
+        return (ServiceLifetime)(lifetimeArgument.Value ?? ServiceLifetime.Scoped);
     }
 }

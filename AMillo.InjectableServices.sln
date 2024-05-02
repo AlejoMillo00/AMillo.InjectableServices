@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectableServices", "InjectableServices\InjectableServices.csproj", "{149A4F44-0C21-451D-8699-E967AE7D52E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InjectableServices", "InjectableServices\InjectableServices.csproj", "{149A4F44-0C21-451D-8699-E967AE7D52E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InjectableServices.Demo", "InjectableServices.Demo\InjectableServices.Demo.csproj", "{D271AF31-01A5-499D-B557-71D0A6F89C2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{149A4F44-0C21-451D-8699-E967AE7D52E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{149A4F44-0C21-451D-8699-E967AE7D52E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{149A4F44-0C21-451D-8699-E967AE7D52E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D271AF31-01A5-499D-B557-71D0A6F89C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D271AF31-01A5-499D-B557-71D0A6F89C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D271AF31-01A5-499D-B557-71D0A6F89C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D271AF31-01A5-499D-B557-71D0A6F89C2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

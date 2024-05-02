@@ -2,9 +2,9 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-[AttributeUsage(AttributeTargets.Interface, Inherited = false)]
-public sealed class InjectableServiceAttribute(ServiceLifetime lifetime = ServiceLifetime.Scoped) : Attribute
+[AttributeUsage(AttributeTargets.Interface, Inherited = false, AllowMultiple = false)]
+public sealed class InjectableServiceAttribute(ServiceLifetime serviceLifetime = ServiceLifetime.Scoped) : Attribute
 {
-    private readonly ServiceLifetime _lifetime = lifetime;
-    public ServiceLifetime Lifetime { get { return _lifetime; } }
+    private readonly ServiceLifetime _serviceLifetime = serviceLifetime;
+    public ServiceLifetime Lifetime { get { return _serviceLifetime; } }
 }
