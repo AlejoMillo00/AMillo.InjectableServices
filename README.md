@@ -62,6 +62,8 @@ Here's why this is good:
 
 3. Mark your service interface with the <strong>[InjectableService]</strong> attribute.
    ```sh
+    using AMillo.InjectableServices.Attributes;
+   
     [InjectableService] //Scoped by default
     internal interface IDemoService
     {
@@ -87,6 +89,8 @@ But if you want, you can specify the lifetime for your service as follows:
 
 1. Mark your service interface with the <strong>[InjectableService]</strong> attribute passing the lifetime to the attribute's constructor.
    ```sh
+    using AMillo.InjectableServices.Attributes;
+   
     //[InjectableService(Lifetime = ServiceLifetime.Singleton)] //For singleton
     //[InjectableService(Lifetime = ServiceLifetime.Transient)] //For transient
     [InjectableService(Lifetime = ServiceLifetime.Scoped)] //For scoped (default)
