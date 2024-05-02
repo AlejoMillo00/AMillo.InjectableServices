@@ -29,22 +29,55 @@ Here's why this is good:
 * Make your services ready-to-use just as you finish creating them, you don't even need to go into the Program / Startup file.
 
 ## Getting Started
-
 ### Installation
-1. Install the package
+- .NET CLI
+  ```sh
+  dotnet add package AMillo.InjectableServices --version 2.0.0
+  ```
+- Package Manager
+  ```sh
+  Install-Package AMillo.InjectableServices -Version 2.0.0
+  ```
+### Usage
+1. Add the following <strong>using</strong> directive on your Program.cs / Startup.cs file
    ```sh
-   Install-Package AMillo.InjectableServices
+   using AMillo.InjectableServices.Extensions.DependencyInjection;
    ```
-2. Call the AddInjectableServices() extension method from AMillo.InjectableServices directive in your Program.cs / Startup.cs file <br/>
-   ![image](https://github.com/AlejoMillo00/AMillo.InjectableServices/assets/43641714/078ba33c-e047-4f86-9896-c12a429cfd73)
+2. Call the <strong>AddInjectableServices</strong> extension method using one of the following overloads
+   - AddInjectableServices()
+     ```sh
+     //Look for injectable services inside all assemblies for current AppDomain
+     builder.Services.AddInjectableServices(); 
+     ```
+   - AddInjectableServicesFromAssemblies(Assembly[] assemblies)
+     ```sh
+     //Look for injectable services inside the specified assemblies
+     builder.Services.AddInjectableServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+     ```
+   - AddInjectableServicesFromAssembly(Assembly assembly)
+     ```sh
+     //Look for injectable services inside a single specified assembly
+     builder.Services.AddInjectableServicesFromAssembly(typeof(Program).Assembly); 
+     ```
 
-## Usage
-7
-Now that you installed the package and set up the feature in your Program.cs / Startup.cs file, you can start creating your services and registering them as follows:
-
-1. Mark your service interface with the <strong>[InjectableService]</strong> attribute. <br/>
-   ![image](https://github.com/AlejoMillo00/AMillo.InjectableServices/assets/43641714/8a6b058c-8bbd-452b-a6cb-a59a4d7a4b21) <br />
-2. That's it! Your service will ge registered automatically on startup.
+3. Mark your service interface with the <strong>[InjectableService]</strong> attribute.
+   ```sh
+    [InjectableService] //Scoped by default
+    internal interface IDemoService
+    {
+        string GetHelloWorld();
+    }
+    
+    internal sealed class DemoService : IDemoService
+    {
+        public string GetHelloWorld()
+        {
+            return "Hello World!";
+        }
+    }
+   ```
+   
+4. That's it! Your service will get registered automatically at startup.
 
 ### Service Lifetime
 By default, the <strong>[InjectableService]</strong> attribute will register your services as <strong>"Scoped"</strong>. 
@@ -52,12 +85,17 @@ By default, the <strong>[InjectableService]</strong> attribute will register you
 But if you want, you can specify the lifetime for your service as follows: 
 <br/>
 
-1. Mark your service interface with the <strong>[InjectableService]</strong> attribute passing the lifetime to the attribute's constructor. <br />
-   ![image](https://github.com/AlejoMillo00/AMillo.InjectableServices/assets/43641714/88636125-7f89-4330-ad98-7dcdc851575d) <br />
-2. That's it! Now your service will get register as Transient automatically on startup.
-
-<br >
-You can pass <strong>Scoped (default), Transient or Singleton</strong> as values for the <strong>[InjectableService]</strong> attribute's constructor, basically the <strong>ServiceLifetime</strong> enum values.
+1. Mark your service interface with the <strong>[InjectableService]</strong> attribute passing the lifetime to the attribute's constructor.
+   ```sh
+    //[InjectableService(Lifetime = ServiceLifetime.Singleton)] //For singleton
+    //[InjectableService(Lifetime = ServiceLifetime.Transient)] //For transient
+    [InjectableService(Lifetime = ServiceLifetime.Scoped)] //For scoped (default)
+    internal interface IDemoService
+    {
+        string GetHelloWorld();
+    }
+   ```
+2. That's it! Now your service will get register as Transient, Singleton or Scoped automatically on startup.
 
 ## Contributing
 
