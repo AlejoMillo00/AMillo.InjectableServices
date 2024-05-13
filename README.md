@@ -40,28 +40,28 @@ Here's why this is good:
   ```
 ### Usage
 1. Add the following <strong>using</strong> directive on your Program.cs / Startup.cs file
-   ```sh
+   <pre lang="cs">
    using AMillo.InjectableServices.Extensions.DependencyInjection;
-   ```
+   </pre>
 2. Call the <strong>AddInjectableServices</strong> extension method using one of the following overloads
    - AddInjectableServices()
-     ```sh
+     <pre lang="cs">
      //Look for injectable services inside all assemblies for current AppDomain
      builder.Services.AddInjectableServices(); 
-     ```
+     </pre>
    - AddInjectableServicesFromAssemblies(Assembly[] assemblies)
-     ```sh
+     <pre lang="cs">
      //Look for injectable services inside the specified assemblies
      builder.Services.AddInjectableServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
-     ```
+     </pre>
    - AddInjectableServicesFromAssembly(Assembly assembly)
-     ```sh
+     <pre lang="cs">
      //Look for injectable services inside a single specified assembly
      builder.Services.AddInjectableServicesFromAssembly(typeof(Program).Assembly); 
-     ```
+     </pre>
 
 3. Mark your service interface with the <strong>[InjectableService]</strong> attribute.
-   ```sh
+   <pre lang="cs">
     using AMillo.InjectableServices.Attributes;
    
     [InjectableService] //Scoped by default
@@ -77,7 +77,7 @@ Here's why this is good:
             return "Hello World!";
         }
     }
-   ```
+   </pre>
    
 4. That's it! Your service will get registered automatically at startup.
 
@@ -88,7 +88,7 @@ But if you want, you can specify the lifetime for your service as follows:
 <br/>
 
 1. Mark your service interface with the <strong>[InjectableService]</strong> attribute passing the lifetime to the attribute's constructor.
-   ```sh
+   <pre lang="cs">
     using AMillo.InjectableServices.Attributes;
    
     //[InjectableService(Lifetime = ServiceLifetime.Singleton)] //For singleton
@@ -98,7 +98,7 @@ But if you want, you can specify the lifetime for your service as follows:
     {
         string GetHelloWorld();
     }
-   ```
+   </pre>
 2. That's it! Now your service will get register as Transient, Singleton or Scoped automatically on startup.
 
 ## Contributing
